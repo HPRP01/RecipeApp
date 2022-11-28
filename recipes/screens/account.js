@@ -27,11 +27,11 @@ export default function AccountScreen({ navigation }) {
     .collection("posts")
     .doc(firebase.auth().currentUser.uid)
     .collection("userPosts")
-    .orderBy("time", "asc")
+    .orderBy("time", "desc")
     .get()
     .then(snap => {
       snap.forEach(doc => {
-          imageArr.push(doc.data().url)
+          imageArr.push(doc.data())
           console.log(doc.data());
       });
       setImages(imageArr);
@@ -55,9 +55,17 @@ export default function AccountScreen({ navigation }) {
         <FlatList 
           style={styles.list}
           data={images}
-          renderItem={({item}) => 
-            <Image style={{height: 500, width: "100%"}} resizeMode="cover" source={{uri:item}}/>
-          }
+          initialNumToRender={4}
+          renderItem={({item}) => {
+            return (
+            <View style={styles.postContainer}>
+              <Text style={styles.titleText}>{item.title}</Text>
+              <Image style={{height: 500, width: "100%"}} resizeMode="cover" source={{uri:item.url}}/>
+              <Text style={styles.descriptionText}>{item.description}</Text>
+            </View>
+            );
+          }}
+          extraData={images}
         />
         <Button 
           title="Back"
@@ -94,5 +102,20 @@ const styles = StyleSheet.create({
   },
   list: {
     flex:1
-  }
+  },
+  postContainer: {
+    marginTop: 4,
+    backgroundColor: 'white'
+  },
+  titleText: {
+    fontSize: 18,
+    paddingLeft: 12,
+    paddingBottom: 4,
+    fontWeight: 'bold'
+  },
+  descriptionText: {
+    fontSize: 18,
+    paddingLeft: 12,
+    paddingBottom: 4
+  },
 })

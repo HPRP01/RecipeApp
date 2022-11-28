@@ -44,7 +44,7 @@ function MyTabs() {
     .then(() => {
       firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid).set({
-        name: 'anon'
+        name: 'Anonymous'
       })
       console.log('User signed in anonymously');
     })
@@ -63,9 +63,9 @@ function MyTabs() {
     .then((result) => {
       firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid).set({
-        name: 'Test'
+        name: 'Admin'
       })
-      console.log('User account created & signed in!');
+      console.log('Admin signed in!');
     })
     .catch(error => {
       if (error.code === 'auth/invalid-email') {

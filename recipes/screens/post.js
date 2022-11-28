@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, Alert, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import firebase from 'firebase/compat/app';
@@ -10,7 +10,8 @@ import "firebase/compat/storage"
 
 export default function PostScreen() {
   const [selectedImage, setSelectedImage] = React.useState(null);
-  const [cameraPermission, setCameraPermission] = React.useState(false);
+  const [title, onChangeTitle] = React.useState(null);
+  const [recipe, onRecipeChange] = React.useState(null);
 
   let openImagePickerAsync = async () => {
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
@@ -28,8 +29,6 @@ export default function PostScreen() {
     const task = firebase.storage().ref()
     .child(`post/${firebase.auth().currentUser.uid}/${Math.random().toString(36)}`)
     .put(blob)
-
-
 
     const taskProgress = () => {
       console.log('Transferred');
@@ -52,32 +51,58 @@ export default function PostScreen() {
     firebase.firestore().collection('posts').doc(firebase.auth().currentUser.uid).collection('userPosts')
     .add({
       url,
+      title: title,
+      description: recipe,
       time: firebase.firestore.FieldValue.serverTimestamp()
     })
     Alert.alert('Image uploaded successfully')
     setSelectedImage(null)
-
+    onChangeTitle(null)
+    onRecipeChange(null)
   }
 
   if(selectedImage !== null)
   {
     return (
-      <View style={styles.container}>
-        <Image
-          source={{ uri: selectedImage.localUri }}
-          style={styles.thumbnail}
-        />
-        <View style={styles.buttons}>
-          <Button 
-            title="Reselect"
-            onPress={openImagePickerAsync}
-          />
-          <Button 
-            title="Upload"
-            onPress={uploadImg}
-          />
-        </View>
-      </View>
+      <KeyboardAvoidingView 
+        style={{flex:1}} 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={64}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <Image
+              source={{ uri: selectedImage.localUri }}
+              style={styles.thumbnail}
+            />
+            <TextInput 
+              style={styles.title}
+              value={title}
+              placeholder="Title"
+              onChangeText={onChangeTitle}
+            />
+            <TextInput 
+              style={styles.title}
+              value={recipe}
+              placeholder="Recipe"
+              onChangeText={onRecipeChange}
+              multiline={true}
+            />
+            <View style={styles.buttons}>
+              <Button 
+                title="Reselect"
+                onPress={openImagePickerAsync}
+              />
+              <Button 
+                title="Upload"
+                onPress={uploadImg}
+              />
+            </View>
+          </View>
+
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+      
     );
   }
   
@@ -109,5 +134,12 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     justifyContent: "space-around"
+  },
+  title: {
+    fontSize: 18,
+    borderWidth: 1,
+    padding: 12,
+    width: "90%",
+    margin: 4
   }
 });
