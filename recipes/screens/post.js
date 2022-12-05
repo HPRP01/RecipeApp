@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, Image, Alert, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Camera } from 'expo-camera';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/firestore";
 import auth from 'firebase/compat/auth';
@@ -18,6 +17,8 @@ export default function PostScreen() {
     if(pickerResult.cancelled === true) {
       return;
     }
+    onChangeTitle(false);
+    onRecipeChange(false);
     setSelectedImage({ localUri: pickerResult.uri });
   }
 
@@ -109,7 +110,7 @@ export default function PostScreen() {
   return (
 
     <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Select Image</Text>
+      <Text>Select Image to Upload</Text>
       <Button 
         title="Select"
         onPress={openImagePickerAsync}
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    borderWidth: 1,
+    borderBottomWidth: 1,
     padding: 12,
     width: "90%",
     margin: 4

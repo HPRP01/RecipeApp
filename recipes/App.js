@@ -1,4 +1,4 @@
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, TextInput, StyleSheet, Alert } from 'react-native';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -37,6 +37,8 @@ const Tab = createBottomTabNavigator();
 function MyTabs() {
   const [initializing, setInitializing] = React.useState(true);
   const [user, setUser] = React.useState();
+  const [email_text, setEmailText] = React.useState(null);
+  const [pass_text, setPassText] = React.useState(null);
 
   let anonymous = () => {
     firebase.auth()
@@ -53,11 +55,52 @@ function MyTabs() {
         console.log('Enable anonymous in your firebase console.');
       }
   
-      console.error(error);
     });
   }
 
   let login = () => {
+    firebase.auth()
+    .signInWithEmailAndPassword(email_text, pass_text)
+    .then((result) => {
+      firebase.firestore().collection("users")
+      .doc(firebase.auth().currentUser.uid).set({
+        name: email_text
+      })
+      console.log('User signed in!');
+      setEmailText(null);
+      setPassText(null);
+    })
+    .catch(error => {
+      if (error.code === 'auth/user-not-found') {
+        console.log('That email address is invalid!');
+        Alert.alert('Account not found. Please register for account.');
+      }
+      if (error.code === 'auth/wrong-password') {
+        Alert.alert('Password is incorrect.')
+      }
+      console.error(error);
+    });
+  }
+
+  let register = () => {
+    firebase.auth()
+    .createUserWithEmailAndPassword(email_text, pass_text)
+    .then((result) => {
+      firebase.firestore().collection("users")
+      .doc(firebase.auth().currentUser.uid).set({
+        name: email_text
+      })
+      console.log('User account created!');
+    })
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert('Email already in use. Please log in.')
+      }
+      console.error(error);
+    })
+  }
+
+  let loginAdmin = () => {
     firebase.auth()
     .signInWithEmailAndPassword('hudsonpanning@gmail.com', 'password')
     .then((result) => {
@@ -66,6 +109,7 @@ function MyTabs() {
         name: 'Admin'
       })
       console.log('Admin signed in!');
+
     })
     .catch(error => {
       if (error.code === 'auth/invalid-email') {
@@ -91,16 +135,42 @@ function MyTabs() {
   if(!user) {
     return (
     <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Welcome</Text>
-      <Text>Please sign in</Text>
-      <Button 
-        title="Admin"
-        onPress={login}
+      <Text style={styles.title}>Recipes</Text>
+      <TextInput 
+        style={styles.loginData}
+        value={email_text}
+        placeholder="email"
+        onChangeText={setEmailText}
+        autoCapitalize="none"
       />
-      <Button 
-        title="Anonymous"
-        onPress={anonymous}
+      <TextInput 
+        style={styles.loginData}
+        value={pass_text}
+        placeholder="password"
+        onChangeText={setPassText}
+        autoCapitalize="none"
+        secureTextEntry={true}
       />
+      <View style={styles.buttonContainer}>
+        <Button 
+          title="Log In"
+          onPress={login}
+        />
+        <Button 
+          title="Register"
+          onPress={register}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button 
+          title="Admin"
+          onPress={loginAdmin}
+        />
+        <Button 
+          title="Anonymous"
+          onPress={anonymous}
+        />
+      </View>
     </View>
     );
   }
@@ -133,3 +203,19 @@ function MyTabs() {
 }
 
 export default MyTabs;
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 36
+  },
+  buttonContainer: {
+    flexDirection: 'row'
+  },
+  loginData: {
+    fontSize: 18,
+    borderBottomWidth: 1,
+    padding: 12,
+    width: "90%",
+    margin: 4
+  }
+});
