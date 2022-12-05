@@ -43,7 +43,7 @@ export default function AccountScreen({ navigation }) {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Account"
+        name="AccountHome"
         component={Home}  
         options={{ headerShown: false }}
       />

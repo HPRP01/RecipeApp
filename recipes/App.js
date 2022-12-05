@@ -64,7 +64,8 @@ function MyTabs() {
     .then((result) => {
       firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid).set({
-        name: email_text
+        name: email_text,
+        uid: firebase.auth().currentUser.uid
       })
       console.log('User signed in!');
       setEmailText(null);
@@ -88,7 +89,8 @@ function MyTabs() {
     .then((result) => {
       firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid).set({
-        name: email_text
+        name: email_text,
+        uid: firebase.auth().currentUser.uid
       })
       console.log('User account created!');
     })
@@ -106,7 +108,8 @@ function MyTabs() {
     .then((result) => {
       firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid).set({
-        name: 'Admin'
+        name: 'Admin',
+        uid: firebase.auth().currentUser.uid
       })
       console.log('Admin signed in!');
 
@@ -134,7 +137,7 @@ function MyTabs() {
 
   if(!user) {
     return (
-    <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style = {styles.startScreen}>
       <Text style={styles.title}>Recipes</Text>
       <TextInput 
         style={styles.loginData}
@@ -142,6 +145,7 @@ function MyTabs() {
         placeholder="email"
         onChangeText={setEmailText}
         autoCapitalize="none"
+        placeholderTextColor='white'
       />
       <TextInput 
         style={styles.loginData}
@@ -150,23 +154,28 @@ function MyTabs() {
         onChangeText={setPassText}
         autoCapitalize="none"
         secureTextEntry={true}
+        placeholderTextColor='white'
       />
       <View style={styles.buttonContainer}>
         <Button 
+          color='white'
           title="Log In"
           onPress={login}
         />
         <Button 
+          color='white'
           title="Register"
           onPress={register}
         />
       </View>
       <View style={styles.buttonContainer}>
         <Button 
+          color='white'
           title="Admin"
           onPress={loginAdmin}
         />
-        <Button 
+        <Button
+          color='white'
           title="Anonymous"
           onPress={anonymous}
         />
@@ -183,18 +192,24 @@ function MyTabs() {
             tabBarIcon:({color, size}) => (
               <MaterialCommunityIcons name="food" color={color} size={size}/>
             ), 
+            headerStyle: { backgroundColor: '#32a866'},
+            headerTintColor: '#fff'
           }}/>
         <Tab.Screen name="Upload" component={PostScreen} 
           options={{
             tabBarIcon:({color, size}) => (
               <MaterialCommunityIcons name="camera" color={color} size={size}/>
             ), 
+            headerStyle: { backgroundColor: '#32a866'},
+            headerTintColor: '#fff'
           }}/>
         <Tab.Screen name="Account" component={AccountScreen} 
           options={{
             tabBarIcon:({color, size}) => (
               <MaterialCommunityIcons name="chef-hat" color={color} size={size}/>
             ), 
+            headerStyle: { backgroundColor: '#32a866'},
+            headerTintColor: '#fff'
           }}/>
       </Tab.Navigator>
 
@@ -206,7 +221,8 @@ export default MyTabs;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 36
+    fontSize: 36,
+    color: '#fff'
   },
   buttonContainer: {
     flexDirection: 'row'
@@ -214,8 +230,16 @@ const styles = StyleSheet.create({
   loginData: {
     fontSize: 18,
     borderBottomWidth: 1,
+    borderBottomColor: '#fff',
     padding: 12,
     width: "90%",
-    margin: 4
+    margin: 4,
+    color: '#fff'
+  },
+  startScreen: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: '#32a866' 
   }
 });

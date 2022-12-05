@@ -11,6 +11,34 @@ export default function HomeScreen({ navigation }) {
   const [imagesLoaded, setImagesLoaded] = React.useState(false);
   const [images, setImages] = React.useState(null);
   const [refreshing, setRefreshing] = React.useState(null);
+  const [following, setFollowing] = React.useState(null);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(imagesLoaded !== true)
+      {
+        // getPosts();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation])
+
+  const getFollowing = async () => {
+    let followingArr = [];
+
+    await firebase.firestore()
+    .collection("followers")
+    .doc(firebase.auth().currentUser.uid)
+    .collection("following")
+    .get()
+    .then(snap => {
+      snap.forEach(doc => {
+        followingArr.push(doc.id)
+      });
+    })
+    setFollowing(followingArr);
+  }
 
   const getPosts = async () => {
     let imageArr = [];
