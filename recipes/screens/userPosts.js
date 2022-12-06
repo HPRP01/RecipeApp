@@ -10,6 +10,14 @@ export default function UserPostsScreen({ navigation }) {
   const [images, setImages] = React.useState(null);
   const [users, setUsers] = React.useState(null);
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getPosts();
+    });
+
+    return unsubscribe;
+  }, [navigation])
+
   const getPosts = async () => {
     let imageArr = [];
 
@@ -54,7 +62,7 @@ export default function UserPostsScreen({ navigation }) {
   {
     if(images.length === 0)
     {
-      return (<View style={{flex:1, justifyContent:'center',alignItems:'center'}}><Text>No Posts Yet</Text><Button title="Back" onPress={goBack}/></View>)
+      return (<View style={{flex:1, justifyContent:'center',alignItems:'center'}}><Text>No Posts Yet</Text></View>)
     }
     return (
       <View style={styles.container}>
@@ -72,10 +80,6 @@ export default function UserPostsScreen({ navigation }) {
             );
           }}
           extraData={images}
-        />
-        <Button 
-          title="Back"
-          onPress={goBack}
         />
       </View>
     );

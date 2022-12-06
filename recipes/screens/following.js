@@ -36,7 +36,7 @@ export default function FollowingScreen({ navigation }) {
     let followingArr = [];
 
     await firebase.firestore()
-    .collection("followers")
+    .collection("users")
     .doc(firebase.auth().currentUser.uid)
     .collection("following")
     .get()
@@ -50,7 +50,7 @@ export default function FollowingScreen({ navigation }) {
 
   const addFollow = async (uid) => {
     firebase.firestore()
-    .collection("followers")
+    .collection("users")
     .doc(firebase.auth().currentUser.uid)
     .collection("following")
     .doc(uid)
@@ -62,7 +62,7 @@ export default function FollowingScreen({ navigation }) {
 
   const removeFollow = async (uid) => {
     firebase.firestore()
-    .collection("followers")
+    .collection("users")
     .doc(firebase.auth().currentUser.uid)
     .collection("following")
     .doc(uid)

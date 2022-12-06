@@ -1,4 +1,4 @@
-import { Text, View, Button, TextInput, StyleSheet, Alert } from 'react-native';
+import { Text, View, Button, TextInput, StyleSheet, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -93,6 +93,8 @@ function MyTabs() {
         uid: firebase.auth().currentUser.uid
       })
       console.log('User account created!');
+      setEmailText(null);
+      setPassText(null);
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
@@ -137,50 +139,59 @@ function MyTabs() {
 
   if(!user) {
     return (
-    <View style = {styles.startScreen}>
-      <Text style={styles.title}>Recipes</Text>
-      <TextInput 
-        style={styles.loginData}
-        value={email_text}
-        placeholder="email"
-        onChangeText={setEmailText}
-        autoCapitalize="none"
-        placeholderTextColor='white'
-      />
-      <TextInput 
-        style={styles.loginData}
-        value={pass_text}
-        placeholder="password"
-        onChangeText={setPassText}
-        autoCapitalize="none"
-        secureTextEntry={true}
-        placeholderTextColor='white'
-      />
-      <View style={styles.buttonContainer}>
-        <Button 
-          color='white'
-          title="Log In"
-          onPress={login}
-        />
-        <Button 
-          color='white'
-          title="Register"
-          onPress={register}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button 
-          color='white'
-          title="Admin"
-          onPress={loginAdmin}
-        />
-        <Button
-          color='white'
-          title="Anonymous"
-          onPress={anonymous}
-        />
-      </View>
-    </View>
+    <KeyboardAvoidingView 
+    style={{flex:1, backgroundColor: '#32a866'}} 
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    keyboardVerticalOffset={64}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+        <View style = {styles.startScreen}>
+          <Text style={styles.title}>Recipes</Text>
+          <TextInput 
+            style={styles.loginData}
+            value={email_text}
+            placeholder="email"
+            onChangeText={setEmailText}
+            autoCapitalize="none"
+            placeholderTextColor='white'
+          />
+          <TextInput 
+            style={styles.loginData}
+            value={pass_text}
+            placeholder="password"
+            onChangeText={setPassText}
+            autoCapitalize="none"
+            secureTextEntry={true}
+            placeholderTextColor='white'
+          />
+          <View style={styles.buttonContainer}>
+            <Button 
+              color='white'
+              title="Log In"
+              onPress={login}
+            />
+            <Button 
+              color='white'
+              title="Register"
+              onPress={register}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button 
+              color='white'
+              title="Admin"
+              onPress={loginAdmin}
+            />
+            <Button
+              color='white'
+              title="Anonymous"
+              onPress={anonymous}
+            />
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
     );
   }
 
@@ -225,7 +236,9 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   buttonContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   loginData: {
     fontSize: 18,

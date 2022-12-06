@@ -4,7 +4,8 @@ import * as ImagePicker from 'expo-image-picker';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/firestore";
 import auth from 'firebase/compat/auth';
-import "firebase/compat/storage"
+import "firebase/compat/storage";
+import ImageManipulator from 'expo-image-manipulator'
 
 
 export default function PostScreen() {
@@ -54,7 +55,8 @@ export default function PostScreen() {
       url,
       title: title,
       description: recipe,
-      time: firebase.firestore.FieldValue.serverTimestamp()
+      time: firebase.firestore.FieldValue.serverTimestamp(),
+      uid: firebase.auth().currentUser.uid
     })
     Alert.alert('Image uploaded successfully')
     setSelectedImage(null)

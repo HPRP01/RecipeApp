@@ -5,6 +5,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore'
 import 'firebase/compat/auth'
 import 'firebase/compat/storage'
+import { useEffect } from 'react';
 
 export default function HomeScreen({ navigation }) {
 
@@ -16,8 +17,8 @@ export default function HomeScreen({ navigation }) {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if(imagesLoaded !== true)
-      {
-        // getPosts();
+      { 
+        getFollowing();
       }
     });
 
@@ -28,7 +29,7 @@ export default function HomeScreen({ navigation }) {
     let followingArr = [];
 
     await firebase.firestore()
-    .collection("followers")
+    .collection("users")
     .doc(firebase.auth().currentUser.uid)
     .collection("following")
     .get()
@@ -36,9 +37,14 @@ export default function HomeScreen({ navigation }) {
       snap.forEach(doc => {
         followingArr.push(doc.id)
       });
+      setFollowing(followingArr);
     })
-    setFollowing(followingArr);
+    
   }
+
+  useEffect(() => {
+    getPosts();
+  }, [following])
 
   const getPosts = async () => {
     let imageArr = [];
@@ -49,13 +55,16 @@ export default function HomeScreen({ navigation }) {
     .get()
     .then(snap => {
       snap.forEach(doc => {
+        if(doc.data() != null && following != null && following.includes(doc.data().uid))
+        {
           imageArr.push(doc.data())
-          console.log(doc.data());
+          setImages(imageArr);
+          console.log(doc.data())
+          setImagesLoaded(true);
+        }
       });
-      setImages(imageArr);
-      setImagesLoaded(true);
-      setRefreshing(false)
     });
+    setRefreshing(false)
   }
 
   if (imagesLoaded !== false)
@@ -65,7 +74,7 @@ export default function HomeScreen({ navigation }) {
         <FlatList 
           style={styles.list}
           data={images}
-          initialNumToRender={4}
+          initialNumToRender={2}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -90,10 +99,6 @@ export default function HomeScreen({ navigation }) {
           }}
           extraData={images}
         />
-        <Button 
-          title="Refresh"
-          onPress={getPosts}
-        />
       </View>
     );
   }
@@ -103,7 +108,7 @@ export default function HomeScreen({ navigation }) {
       <Text>Home Screen</Text>
       <Button 
         title="Load Posts"
-        onPress={getPosts}
+        onPress={getFollowing}
       />
     </View>
   );
