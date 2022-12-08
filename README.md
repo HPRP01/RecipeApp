@@ -22,22 +22,23 @@ I also decided to use Expo as it made it much easier to rapidly prototype and te
 - Expo Image Picker
   - This package is used to enable the user to open the camera roll on their device and select the image they want to upload.
 
-
 ## Design
-<p float="left">
-  <img src="https://user-images.githubusercontent.com/55462701/205974664-99a88e37-a679-4851-9bf5-e0205c810e3b.PNG" width="180">
-  <img src="https://user-images.githubusercontent.com/55462701/205974686-5caad530-ec8d-4257-b4db-d37b943b2b28.PNG" width="180">
-  <img src="https://user-images.githubusercontent.com/55462701/205974816-08ce982b-8069-4b5b-a7e1-8f93930fe574.PNG" width="180">
-  <img src="https://user-images.githubusercontent.com/55462701/205974829-69b9c984-7433-47d3-b24a-903d7aef6786.PNG" width="180">
-  <img src="https://user-images.githubusercontent.com/55462701/205974855-9b50e07f-8d77-4bd4-8fee-3d049dba7724.PNG" width="180">
-</p>
+<img src="https://user-images.githubusercontent.com/55462701/205974664-99a88e37-a679-4851-9bf5-e0205c810e3b.PNG" width="180">
 
 When the user launches the application they are met with a Login/Registration screen where they can either sign in to an existing account or create a new account. For ease of testing there is also a button to automatically sign in to the administrator account. This button will be removed in future iterations. 
 
+<img src="https://user-images.githubusercontent.com/55462701/205974855-9b50e07f-8d77-4bd4-8fee-3d049dba7724.PNG" width="180">
+
 Once the user has signed in they are greeted with three main pages. The first page is the Home page where they are able to see all of the recipes uploaded from other users that they follow and they are able to like a post. This page is sorted such that the newest post always appears at the top and has pull to refresh implemented so new posts can be loaded dynamically. 
+
+<img src="https://user-images.githubusercontent.com/55462701/205974686-5caad530-ec8d-4257-b4db-d37b943b2b28.PNG" width="180">
 
 The second page is the Post page where a user is able to create a recipe to upload. The user first selects an image that they want from the device's camera roll and they can then add a title a description of the recipe. When the user clicks upload the post is uploaded to the database and saved to their account. 
 
+<p float="left">
+  <img src="https://user-images.githubusercontent.com/55462701/205974816-08ce982b-8069-4b5b-a7e1-8f93930fe574.PNG" width="180">
+  <img src="https://user-images.githubusercontent.com/55462701/205974829-69b9c984-7433-47d3-b24a-903d7aef6786.PNG" width="180">
+</p>
 The third page is the Account page where a user can choose the accounts they follow, view their own posts, view liked posts, and sign out of their account. 
 
 ## How it Works
