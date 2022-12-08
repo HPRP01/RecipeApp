@@ -8,7 +8,6 @@ import 'firebase/compat/storage'
 export default function UserPostsScreen({ navigation }) {
   const [imagesLoaded, setImagesLoaded] = React.useState(false);
   const [images, setImages] = React.useState(null);
-  const [users, setUsers] = React.useState(null);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -34,24 +33,6 @@ export default function UserPostsScreen({ navigation }) {
       setImages(imageArr);
       setImagesLoaded(true);
     });
-  }
-
-  const getUsers = async () => {
-    let followersArr = [];
-
-    await firebase.firestore()
-    .collectionGroup("users")
-    .get()
-    .then(snap => {
-      snap.forEach(doc => {
-        followersArr.push(doc.data())
-      });
-      setUsers(followersArr);
-    })
-  }
-
-  let goBack = () => {
-    setImagesLoaded(false);
   }
 
   if (imagesLoaded !== false)
