@@ -65,8 +65,25 @@ The third page is the Account page where a user can choose the accounts they fol
 ### Displaying Individual User Uploads
 ![Displaying Individual User Uploads](https://user-images.githubusercontent.com/55462701/206504312-50a76248-c79d-479d-8d47-130f0e866ab0.png)
 
-## Testing
+## Design Process
+While building this app I decided to divide it into various iterations to track my progress. 
 
+I started with a user that was automatically signed in that would be able to upload a photo and nothing else. 
+
+Next, I added a way for the user to see the posts that they uploaded along with a global feed of all posts that have been added to the database. 
+
+After that I created a way for a user to register for a new account and then also login to the same account in the future so that they could see their post individual posts. 
+
+From there I added a way for a user to select other accounts that they want to follow and implemented a filter on the home feed that would only show posts from the accounts being followed. 
+
+For the last iteration I created a system so that users could like a post and then see in a separate screen all of the posts that they have previously liked. 
+
+## Testing
+Since there were so many different components I decided that the best way to test and verify my project would be through manual testing. To do this I tested all of the functionality be hand, checked to ensure that the output was as expected, and then verified that the correct data had been updated in the Firebase datastore and storage from the online console. 
+
+In the future I would consider adding automatic tests in the code that could be run on every change to ensure that nothing would break when pushing new changes. For the purposes of this project though, I found that manual testing was thorough enough to catch all of the edge cases that I could think of. 
+
+In doing this testing I did uncover various issues that I had overlooked and it allowed me to add checks and catch statements to handle any errors that occured during use of the app. 
 
 ## What I Learned
 During the development of this application I learned a lot about what goes into the building of an app. One of the major issues I ran into was the dependencies changing between different versions of packages. I had a lot of problems with compatability between packages and when reading through support forums often found that I needed to revert the version from the most updated for certain packages to work properly. 
