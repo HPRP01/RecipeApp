@@ -56,8 +56,10 @@ export default function PostScreen() {
       title: title,
       description: recipe,
       time: firebase.firestore.FieldValue.serverTimestamp(),
-      uid: firebase.auth().currentUser.uid
+      uid: firebase.auth().currentUser.uid,
+      userName: firebase.auth().currentUser.email
     })
+    console.log(firebase.auth().currentUser.email)
     Alert.alert('Image uploaded successfully')
     setSelectedImage(null)
     onChangeTitle(null)

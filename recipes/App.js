@@ -1,7 +1,6 @@
 import { Text, View, Button, TextInput, StyleSheet, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -39,24 +38,6 @@ function MyTabs() {
   const [user, setUser] = React.useState();
   const [email_text, setEmailText] = React.useState(null);
   const [pass_text, setPassText] = React.useState(null);
-
-  let anonymous = () => {
-    firebase.auth()
-    .signInAnonymously()
-    .then(() => {
-      firebase.firestore().collection("users")
-      .doc(firebase.auth().currentUser.uid).set({
-        name: 'Anonymous'
-      })
-      console.log('User signed in anonymously');
-    })
-    .catch(error => {
-      if (error.code === 'auth/operation-not-allowed') {
-        console.log('Enable anonymous in your firebase console.');
-      }
-  
-    });
-  }
 
   let login = () => {
     firebase.auth()
@@ -140,12 +121,11 @@ function MyTabs() {
   if(!user) {
     return (
     <KeyboardAvoidingView 
-    style={{flex:1, backgroundColor: '#32a866'}} 
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    keyboardVerticalOffset={64}
+      style={{flex:1, backgroundColor: '#32a866'}} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={64}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
         <View style = {styles.startScreen}>
           <Text style={styles.title}>Recipes</Text>
           <TextInput 
@@ -182,11 +162,6 @@ function MyTabs() {
               color='white'
               title="Admin"
               onPress={loginAdmin}
-            />
-            <Button
-              color='white'
-              title="Anonymous"
-              onPress={anonymous}
             />
           </View>
         </View>

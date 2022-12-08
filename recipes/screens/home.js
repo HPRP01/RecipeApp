@@ -14,6 +14,8 @@ export default function HomeScreen({ navigation }) {
   const [refreshing, setRefreshing] = React.useState(null);
   const [following, setFollowing] = React.useState(null);
 
+  // This effect is tied to `navigation` so that then the home screen 
+  // comes into focus for the first time the data is loaded automatically
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if(imagesLoaded !== true)
@@ -25,6 +27,7 @@ export default function HomeScreen({ navigation }) {
     return unsubscribe;
   }, [navigation])
 
+  // This function gets all the accounts that the current user is following
   const getFollowing = async () => {
     let followingArr = [];
 
@@ -42,12 +45,15 @@ export default function HomeScreen({ navigation }) {
     
   }
 
+  // Effect is tied to `following` so that when the followers are updated, `getPosts()` is called automatically
   useEffect(() => {
     getPosts();
   }, [following])
 
+  // This function gets all posts and stores the ones from the accounts the current user is following
   const getPosts = async () => {
     let imageArr = [];
+    let data = {};
     setRefreshing(true);
     await firebase.firestore()
     .collectionGroup('userPosts')
@@ -57,9 +63,8 @@ export default function HomeScreen({ navigation }) {
       snap.forEach(doc => {
         if(doc.data() != null && following != null && following.includes(doc.data().uid))
         {
-          imageArr.push(doc.data())
+          imageArr.push({"id":doc.id, "liked":false, "data":doc.data()})
           setImages(imageArr);
-          console.log(doc.data())
           setImagesLoaded(true);
         }
       });
@@ -67,6 +72,20 @@ export default function HomeScreen({ navigation }) {
     setRefreshing(false)
   }
 
+  const likePost = async (postId) => {
+    firebase.firestore()
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .collection("liked")
+    .doc(postId)
+    .set({})
+    .then(() => {
+      console.log('Post Liked')
+    })
+  }
+  
+
+  // If imagesLoaded is True display the list of posts
   if (imagesLoaded !== false)
   {
     return (
@@ -82,18 +101,20 @@ export default function HomeScreen({ navigation }) {
             />
           }
           renderItem={({item}) => {
+            let isLiked = false;
             return (
             <View style={styles.postContainer}>
-              <Text style={styles.titleText}>{item.title}</Text>
-              <Image style={{height: 500, width: "100%"}} resizeMode="cover" source={{uri:item.url}}/>
+              <Text style={styles.titleText}>{item.data.title}</Text>
+              <Image style={{height: 500, width: "100%"}} resizeMode="cover" source={{uri:item.data.url}}/>
               <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={()=>{}}>
+                <Text>{item.data.userName}</Text>
+                <TouchableOpacity onPress={()=>{likePost(item.id); isLiked = true;}}>
                   <View>
-                    <MaterialCommunityIcons name="heart-outline" size={30}/>
+                    <MaterialCommunityIcons name="heart" color={isLiked ? "red":"grey"} size={30}/>
                   </View>
                 </TouchableOpacity>
               </View>
-              <Text style={styles.descriptionText}>{item.description}</Text>
+              <Text style={styles.descriptionText}>{item.data.description}</Text>
             </View>
             );
           }}
@@ -103,17 +124,19 @@ export default function HomeScreen({ navigation }) {
     );
   }
 
+  // If no posts are found display reload button 
   return (
     <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
+      <Text>No Posts Found</Text>
       <Button 
-        title="Load Posts"
+        title="Reload"
         onPress={getFollowing}
       />
     </View>
   );
 }
 
+// Create styles for components in screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -137,6 +160,10 @@ const styles = StyleSheet.create({
     paddingBottom: 4
   },
   buttonContainer: {
-    paddingLeft: 8
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 10,
+    paddingLeft: 10,
+    alignItems: 'flex-end'
   }
 })

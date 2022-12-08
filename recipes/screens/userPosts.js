@@ -30,10 +30,8 @@ export default function UserPostsScreen({ navigation }) {
     .then(snap => {
       snap.forEach(doc => {
           imageArr.push(doc.data())
-          console.log(doc.data());
       });
       setImages(imageArr);
-      console.log(images);
       setImagesLoaded(true);
     });
   }
@@ -47,10 +45,8 @@ export default function UserPostsScreen({ navigation }) {
     .then(snap => {
       snap.forEach(doc => {
         followersArr.push(doc.data())
-        console.log(doc.data());
       });
       setUsers(followersArr);
-      console.log(users);
     })
   }
 

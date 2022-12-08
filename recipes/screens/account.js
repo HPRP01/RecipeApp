@@ -7,6 +7,7 @@ import 'firebase/compat/storage'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FollowingScreen from './following';
 import UserPostsScreen from './userPosts';
+import LikedPostsScreen from './likedPosts';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,10 @@ function Home({ navigation }) {
         onPress={() => navigation.navigate("My Posts")}
       />
       <Button 
+        title="Liked Posts"  
+        onPress={() => navigation.navigate("Liked Posts")}
+      />
+      <Button 
         title="Sign out"
         onPress={signout}
       />
@@ -54,6 +59,10 @@ export default function AccountScreen({ navigation }) {
       <Stack.Screen
         name="My Posts"
         component={UserPostsScreen}
+      />
+      <Stack.Screen
+        name="Liked Posts"
+        component={LikedPostsScreen}
       />
     </Stack.Navigator>
   ); 
