@@ -12,9 +12,10 @@ import PostScreen from './screens/post';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/firestore";
 import auth from 'firebase/compat/auth';
+import REACT_APP_API_KEY from './.env';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDPQoYCILVBsLl0Blp3bdPMEcFzPGOT8VA',
+  apiKey: 'REACT_APP_API_KEY',
   authDomain: "recipeapp-1162e.firebaseapp.com",
   projectId: "recipeapp-1162e",
   storageBucket: "recipeapp-1162e.appspot.com",
